@@ -85,10 +85,10 @@ module.exports = (api) => {
             });
 
         registry
-            .command("config")
+            .command("settings")
             .description("Open AubTabAlign configuration UI")
             .handler((ctx) => {
-                ctx.send("§eOpening AubTabAlign configuration...");
+                ctx.send("§eOpening AubTabAlign configuration... Use the built-in /aubtabalign config command.");
                 // The config UI is automatically handled by the plugin system
             });
 
