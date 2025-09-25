@@ -286,8 +286,12 @@ class AubTabAlign {
 
     // Helper method to manually trigger alignment (used by realign command)
     manualAlignment() {
-        this.whoCommandDetected = true;
-        this.lastWhoTime = Date.now();
-        this.applyAlignment();
+        try {
+            this.whoCommandDetected = true;
+            this.lastWhoTime = Date.now();
+            this.applyAlignment();
+        } catch (error) {
+            this.api.log(`Error in manualAlignment: ${error.message}`);
+        }
     }
 }
