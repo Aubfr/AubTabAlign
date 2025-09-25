@@ -255,30 +255,41 @@ class AubTabAlign {
         try {
             const players = this.api.players || [];
             const spacesCount = this.api.config.get('spacesCount') || 4;
+            const alignmentMethod = this.api.config.get('alignmentMethod') || 'prefix';
+            const alignmentSpaces = ' '.repeat(spacesCount);
 
-            this.api.debugLog(`Applying alignment with ${spacesCount} spaces to ${players.length} players`);
+            this.api.debugLog(`Applying alignment with ${spacesCount} spaces using ${alignmentMethod} method to ${players.length} players`);
 
             for (const player of players) {
                 if (player && player.uuid && !this.alignedPlayers.has(player.uuid)) {
-                    // Try different alignment approaches based on configuration
-                    if (spacesCount <= 4) {
-                        // For small alignment, use prefix with regular spaces
-                        const alignmentSpaces = ' '.repeat(spacesCount);
-                        this.api.setDisplayNamePrefix(player.uuid, alignmentSpaces);
-                    } else {
-                        // For larger alignment, try suffix with special formatting
-                        const alignmentString = ' '.repeat(spacesCount - 4) + '    ';
-                        this.api.prependDisplayNameSuffix(player.uuid, alignmentString);
+                    
+                    // Apply alignment based on selected method
+                    switch (alignmentMethod) {
+                        case 'suffix':
+                            this.api.prependDisplayNameSuffix(player.uuid, alignmentSpaces);
+                            break;
+                        case 'auto':
+                            // Smart choice: use prefix for small spacing, suffix for large
+                            if (spacesCount <= 4) {
+                                this.api.setDisplayNamePrefix(player.uuid, alignmentSpaces);
+                            } else {
+                                this.api.prependDisplayNameSuffix(player.uuid, alignmentSpaces);
+                            }
+                            break;
+                        case 'prefix':
+                        default:
+                            this.api.setDisplayNamePrefix(player.uuid, alignmentSpaces);
+                            break;
                     }
                     
                     this.alignedPlayers.add(player.uuid);
-                    this.api.debugLog(`Applied alignment to player: ${player.name}`);
+                    this.api.debugLog(`Applied ${alignmentMethod} alignment to player: ${player.name}`);
                 }
             }
 
-            // Send confirmation message only if debug is enabled
-            if (players.length > 0 && this.api.debug) {
-                this.api.chat(`${this.PLUGIN_PREFIX} §aApplied alignment to ${players.length} players.`);
+            // Send confirmation message
+            if (players.length > 0) {
+                this.api.chat(`${this.PLUGIN_PREFIX} §aApplied ${alignmentMethod} alignment to ${players.length} players with ${spacesCount} spaces.`);
             }
         } catch (error) {
             this.api.log(`Error in applyAlignment: ${error.message}`);
