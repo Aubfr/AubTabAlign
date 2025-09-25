@@ -6,4 +6,7 @@ build/
 data/
 config/
 .claude/
-scripts/
+scripts/-e 
+# Environment files
+*.env
+*.env.*
