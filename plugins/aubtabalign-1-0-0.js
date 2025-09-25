@@ -101,7 +101,7 @@ module.exports = (api) => {
                     return;
                 }
                 
-                aubTabAlign.applyAlignment();
+                aubTabAlign.manualAlignment();
                 ctx.send("§aTAB list realigned!");
             });
 
