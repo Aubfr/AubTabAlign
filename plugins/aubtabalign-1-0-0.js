@@ -136,22 +136,26 @@ class AubTabAlign {
     }
 
     onChat(event) {
-        if (!this.api.config.get('enabled')) {
-            return;
-        }
+        try {
+            if (!this.api.config.get('enabled') || !event || !event.message) {
+                return;
+            }
 
-        const message = event.message;
-        
-        // Detect when player executes /who command
-        if (this.isWhoCommandMessage(message)) {
-            this.api.debugLog('Detected /who command execution');
-            this.whoCommandDetected = true;
-            this.lastWhoTime = Date.now();
+            const message = event.message;
             
-            // Apply alignment after a short delay to ensure player list is updated
-            setTimeout(() => {
-                this.applyAlignment();
-            }, 500);
+            // Detect when player executes /who command
+            if (this.isWhoCommandMessage(message)) {
+                this.api.debugLog('Detected /who command execution');
+                this.whoCommandDetected = true;
+                this.lastWhoTime = Date.now();
+                
+                // Apply alignment after a short delay to ensure player list is updated
+                setTimeout(() => {
+                    this.applyAlignment();
+                }, 1000);  // Increased delay to 1 second
+            }
+        } catch (error) {
+            this.api.log(`Error in onChat: ${error.message}`);
         }
     }
 
