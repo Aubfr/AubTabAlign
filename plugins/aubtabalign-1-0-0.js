@@ -250,18 +250,22 @@ class AubTabAlign {
     }
 
     clearAllAlignment() {
-        this.api.debugLog('Clearing all TAB alignment');
-        
-        // Clear prefixes for all aligned players
-        for (const uuid of this.alignedPlayers) {
-            this.api.clearDisplayNamePrefix(uuid);
+        try {
+            this.api.debugLog('Clearing all TAB alignment');
+            
+            // Clear prefixes for all aligned players
+            for (const uuid of this.alignedPlayers) {
+                this.api.clearDisplayNamePrefix(uuid);
+            }
+            
+            // Also clear any remaining display names via the bulk clear
+            this.api.clearAllDisplayNames();
+            
+            this.alignedPlayers.clear();
+            this.whoCommandDetected = false;
+        } catch (error) {
+            this.api.log(`Error in clearAllAlignment: ${error.message}`);
         }
-        
-        // Also clear any remaining display names via the bulk clear
-        this.api.clearAllDisplayNames();
-        
-        this.alignedPlayers.clear();
-        this.whoCommandDetected = false;
     }
 
     // Helper method to manually trigger alignment (used by realign command)
