@@ -269,9 +269,9 @@ class AubTabAlign {
         try {
             this.api.debugLog('Clearing all TAB alignment');
             
-            // Clear prefixes for all aligned players
+            // Clear suffixes for all aligned players
             for (const uuid of this.alignedPlayers) {
-                this.api.clearDisplayNamePrefix(uuid);
+                this.api.clearDisplayNameSuffix(uuid);
             }
             
             // Also clear any remaining display names via the bulk clear
