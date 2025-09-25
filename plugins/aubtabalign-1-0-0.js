@@ -160,15 +160,19 @@ class AubTabAlign {
     }
 
     onPlayerJoin(event) {
-        if (!this.api.config.get('enabled') || !this.api.config.get('autoRealignOnJoin')) {
-            return;
-        }
+        try {
+            if (!this.api.config.get('enabled') || !this.api.config.get('autoRealignOnJoin')) {
+                return;
+            }
 
-        // Realign when new players join if we recently used /who
-        if (this.whoCommandDetected && (Date.now() - this.lastWhoTime < 60000)) { // Within 1 minute of /who
-            setTimeout(() => {
-                this.applyAlignment();
-            }, 1000);
+            // Realign when new players join if we recently used /who
+            if (this.whoCommandDetected && (Date.now() - this.lastWhoTime < 60000)) { // Within 1 minute of /who
+                setTimeout(() => {
+                    this.applyAlignment();
+                }, 2000);  // Increased delay for player join
+            }
+        } catch (error) {
+            this.api.log(`Error in onPlayerJoin: ${error.message}`);
         }
     }
 
