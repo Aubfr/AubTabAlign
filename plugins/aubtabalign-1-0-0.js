@@ -243,16 +243,22 @@ class AubTabAlign {
         try {
             const players = this.api.players || [];
             const spacesCount = this.api.config.get('spacesCount') || 4;
-            
-            // Use a combination of spaces and tabs for better alignment
-            const alignmentString = '    '.repeat(spacesCount / 2); // More consistent spacing
 
             this.api.debugLog(`Applying alignment with ${spacesCount} spaces to ${players.length} players`);
 
             for (const player of players) {
                 if (player && player.uuid && !this.alignedPlayers.has(player.uuid)) {
-                    // Try using prependDisplayNameSuffix for better alignment
-                    this.api.prependDisplayNameSuffix(player.uuid, alignmentString);
+                    // Try different alignment approaches based on configuration
+                    if (spacesCount <= 4) {
+                        // For small alignment, use prefix with regular spaces
+                        const alignmentSpaces = ' '.repeat(spacesCount);
+                        this.api.setDisplayNamePrefix(player.uuid, alignmentSpaces);
+                    } else {
+                        // For larger alignment, try suffix with special formatting
+                        const alignmentString = ' '.repeat(spacesCount - 4) + '    ';
+                        this.api.prependDisplayNameSuffix(player.uuid, alignmentString);
+                    }
+                    
                     this.alignedPlayers.add(player.uuid);
                     this.api.debugLog(`Applied alignment to player: ${player.name}`);
                 }
