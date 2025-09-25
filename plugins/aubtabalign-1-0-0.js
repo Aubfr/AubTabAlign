@@ -224,24 +224,28 @@ class AubTabAlign {
             return;
         }
 
-        const players = this.api.getPlayers();
-        const spacesCount = this.api.config.get('spacesCount');
-        const alignmentSpaces = ' '.repeat(spacesCount);
+        try {
+            const players = this.api.players || [];
+            const spacesCount = this.api.config.get('spacesCount') || 4;
+            const alignmentSpaces = ' '.repeat(spacesCount);
 
-        this.api.debugLog(`Applying alignment with ${spacesCount} spaces to ${players.length} players`);
+            this.api.debugLog(`Applying alignment with ${spacesCount} spaces to ${players.length} players`);
 
-        for (const player of players) {
-            if (player.uuid && !this.alignedPlayers.has(player.uuid)) {
-                // Add spaces as prefix while preserving existing display information
-                this.api.setDisplayNamePrefix(player.uuid, alignmentSpaces);
-                this.alignedPlayers.add(player.uuid);
-                this.api.debugLog(`Applied alignment to player: ${player.name}`);
+            for (const player of players) {
+                if (player && player.uuid && !this.alignedPlayers.has(player.uuid)) {
+                    // Add spaces as prefix while preserving existing display information
+                    this.api.setDisplayNamePrefix(player.uuid, alignmentSpaces);
+                    this.alignedPlayers.add(player.uuid);
+                    this.api.debugLog(`Applied alignment to player: ${player.name}`);
+                }
             }
-        }
 
-        // Send confirmation message
-        if (players.length > 0) {
-            this.api.chat(`${this.PLUGIN_PREFIX} §aApplied alignment to ${players.length} players with ${spacesCount} spaces.`);
+            // Send confirmation message only if debug is enabled
+            if (players.length > 0 && this.api.debug) {
+                this.api.chat(`${this.PLUGIN_PREFIX} §aApplied alignment to ${players.length} players with ${spacesCount} spaces.`);
+            }
+        } catch (error) {
+            this.api.log(`Error in applyAlignment: ${error.message}`);
         }
     }
 
