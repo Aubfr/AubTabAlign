@@ -21,7 +21,8 @@ module.exports = (api) => {
                 enabled: true,
                 spacesCount: 4,
                 autoRealignOnJoin: true,
-                autoRealignOnRespawn: true
+                autoRealignOnRespawn: true,
+                alignmentMethod: 'prefix'
             },
             settings: [
                 {
@@ -46,6 +47,17 @@ module.exports = (api) => {
                         { text: '6 spaces', value: 6 },
                         { text: '8 spaces', value: 8 },
                         { text: '10 spaces', value: 10 }
+                    ]
+                },
+                {
+                    type: 'cycle',
+                    key: 'alignmentMethod',
+                    description: 'How to apply the alignment spacing.',
+                    displayLabel: 'Method',
+                    values: [
+                        { text: 'Prefix (before name)', value: 'prefix' },
+                        { text: 'Suffix (after stats)', value: 'suffix' },
+                        { text: 'Auto (smart choice)', value: 'auto' }
                     ]
                 },
                 {
