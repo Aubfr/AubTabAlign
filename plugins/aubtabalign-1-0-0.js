@@ -249,8 +249,8 @@ class AubTabAlign {
 
             for (const player of players) {
                 if (player && player.uuid && !this.alignedPlayers.has(player.uuid)) {
-                    // Add spaces as prefix while preserving existing display information
-                    this.api.setDisplayNamePrefix(player.uuid, alignmentSpaces);
+                    // Add spaces as suffix to align the entire TAB entry
+                    this.api.setDisplayNameSuffix(player.uuid, alignmentSpaces);
                     this.alignedPlayers.add(player.uuid);
                     this.api.debugLog(`Applied alignment to player: ${player.name}`);
                 }
