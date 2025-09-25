@@ -243,14 +243,16 @@ class AubTabAlign {
         try {
             const players = this.api.players || [];
             const spacesCount = this.api.config.get('spacesCount') || 4;
-            const alignmentSpaces = ' '.repeat(spacesCount);
+            
+            // Use a combination of spaces and tabs for better alignment
+            const alignmentString = '    '.repeat(spacesCount / 2); // More consistent spacing
 
             this.api.debugLog(`Applying alignment with ${spacesCount} spaces to ${players.length} players`);
 
             for (const player of players) {
                 if (player && player.uuid && !this.alignedPlayers.has(player.uuid)) {
-                    // Add spaces as suffix to align the entire TAB entry
-                    this.api.setDisplayNameSuffix(player.uuid, alignmentSpaces);
+                    // Try using prependDisplayNameSuffix for better alignment
+                    this.api.prependDisplayNameSuffix(player.uuid, alignmentString);
                     this.alignedPlayers.add(player.uuid);
                     this.api.debugLog(`Applied alignment to player: ${player.name}`);
                 }
@@ -258,7 +260,7 @@ class AubTabAlign {
 
             // Send confirmation message only if debug is enabled
             if (players.length > 0 && this.api.debug) {
-                this.api.chat(`${this.PLUGIN_PREFIX} §aApplied alignment to ${players.length} players with ${spacesCount} spaces.`);
+                this.api.chat(`${this.PLUGIN_PREFIX} §aApplied alignment to ${players.length} players.`);
             }
         } catch (error) {
             this.api.log(`Error in applyAlignment: ${error.message}`);
