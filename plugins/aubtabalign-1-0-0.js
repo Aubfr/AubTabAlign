@@ -212,19 +212,27 @@ class AubTabAlign {
     }
 
     isWhoCommandMessage(message) {
-        // Clean message from color codes
-        const cleanMessage = message.replace(/§[0-9a-fk-or]/g, '').trim();
+        if (!message || typeof message !== 'string') {
+            return false;
+        }
         
-        // Common patterns that indicate /who command was executed
-        const whoPatterns = [
-            /^ONLINE:/,
-            /^Players \(\d+\):/,
-            /^Total players online:/,
-            /^\[\d+\]/,  // Player count in brackets
-            /^Players in this lobby:/
-        ];
+        try {
+            // Clean message from color codes
+            const cleanMessage = message.replace(/§[0-9a-fk-or]/g, '').trim().toLowerCase();
+            
+            // Common patterns that indicate /who command was executed
+            const whoPatterns = [
+                'online:',
+                'players (',
+                'total players online',
+                'players in this lobby'
+            ];
 
-        return whoPatterns.some(pattern => pattern.test(cleanMessage));
+            return whoPatterns.some(pattern => cleanMessage.includes(pattern));
+        } catch (error) {
+            this.api.log(`Error in isWhoCommandMessage: ${error.message}`);
+            return false;
+        }
     }
 
     applyAlignment() {
